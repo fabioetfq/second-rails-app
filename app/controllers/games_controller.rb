@@ -7,8 +7,9 @@ class GamesController < ApplicationController
   end
 
   def check_grid?(attempt, grid)
-    dup_letter = attempt.detect { |x| attempt.count(x) > 1 }
+    dup_letter = grid.detect { |x| attempt.count(x) > 1 }
     if grid.count(dup_letter) > 1
+      raise
       attempt - grid == []
     else
       intersection = grid.intersection(attempt).sort
@@ -17,9 +18,10 @@ class GamesController < ApplicationController
   end
 
   def json(attempt)
-    url = "https://wagon-dictionary.herokuapp.com/#{attempt}"
+    url = "https://dictionary.lewagon.com/#{attempt}"
     attempt_serialized = URI.open(url).read
     JSON.parse(attempt_serialized)
+    debugger
   end
 
   def run_game(attempt, grid)
@@ -39,7 +41,7 @@ class GamesController < ApplicationController
   end
 
   def score
-    # raise
+    # debugger
     @word = params[:word]
     run_game(@word, @letters)
   end
